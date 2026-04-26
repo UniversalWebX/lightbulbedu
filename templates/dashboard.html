@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>emailjs.init("service_c9fuw4m");</script>
+</head>
+<body class="bg-white">
+    <nav class="bg-black text-yellow-400 p-6 flex justify-between border-b-8 border-yellow-400">
+        <h1 class="text-3xl font-black italic uppercase">Lightbulb Edu</h1>
+        <span class="text-white font-bold">{{ user.first_name }} {{ user.last_initial }}.</span>
+    </nav>
+
+    <div class="max-w-6xl mx-auto p-10 grid grid-cols-1 md:grid-cols-3 gap-10">
+        {% if user.is_teacher %}
+        <div class="border-4 border-black p-6 bg-gray-50 shadow-[10px_10px_0px_0px_rgba(0,0,0,1)]">
+            <h2 class="text-2xl font-black mb-4 uppercase">New Assignment</h2>
+            <form action="/assign" method="POST" enctype="multipart/form-data" class="space-y-4" onsubmit="sendAssignedEmail()">
+                <input name="title" id="t-title" placeholder="Task Name" class="w-full border-2 border-black p-2 outline-none">
+                <select name="type" id="t-type" class="w-full border-2 border-black p-2 bg-white">
+                    <option value="worksheet">Worksheet</option>
+                    <option value="essay">Essay</option>
+                </select>
+                <input name="file" type="file" class="text-xs">
+                <input name="min_s" type="number" placeholder="Min Sentences" class="w-full border-2 border-black p-2">
+                <button type="submit" class="w-full bg-black text-white py-3 font-bold hover:bg-yellow-400 hover:text-black">POST</button>
+            </form>
+        </div>
+        {% endif %}
+
+        <div class="md:col-span-2 space-y-6">
+            {% for task in assignments %}
+            <div class="border-4 border-black p-6 hover:translate-y-[-5px] transition-all bg-white shadow-[6px_6px_0px_0px_rgba(255,215,0,1)]">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-black">{{ task.title }}</h3>
+                    <span class="bg-black text-white px-2 py-1 text-xs font-bold">{{ task.type.upper() }}</span>
+                </div>
+
+                <div class="mt-4">
+                    {% if task.type == 'essay' %}
+                    <textarea id="essay-{{task.id}}" onkeyup="logKey(event, {{task.id}})" class="w-full border-2 border-black h-40 p-4 outline-none" placeholder="Write here..."></textarea>
+                    <input type="hidden" id="replay-{{task.id}}">
+                    <button onclick="submitEssay({{task.id}})" class="mt-2 bg-black text-white px-6 py-2 font-bold">SUBMIT ESSAY</button>
+                    {% else %}
+                    <form action="/submit/{{task.id}}" method="POST" enctype="multipart/form-data">
+                        <input type="file" name="worksheet_file" class="mb-2">
+                        <button type="submit" class="bg-black text-white px-6 py-2 font-bold">UPLOAD WORK</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        let keystrokes = {};
+
+        function logKey(e, id) {
+            if (!keystrokes[id]) keystrokes[id] = [];
+            keystrokes[id].push({ char: e.key, time: Date.now(), val: e.target.value });
+            document.getElementById('replay-'+id).value = JSON.stringify(keystrokes[id]);
+        }
+
+        function submitEssay(id) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/submit/' + id;
+            
+            const text = document.createElement('input');
+            text.name = 'essay_text';
+            text.value = document.getElementById('essay-'+id).value;
+            
+            const rep = document.createElement('input');
+            rep.name = 'replay_json';
+            rep.value = document.getElementById('replay-'+id).value;
+
+            form.appendChild(text);
+            form.appendChild(rep);
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        function sendAssignedEmail() {
+            emailjs.send("service_id", "assigned_template", {
+                task_name: document.getElementById('t-title').value,
+                task_type: document.getElementById('t-type').value,
+                to_email: "goli.naghibi@gmail.com"
+            });
+        }
+    </script>
+</body>
+</html>
