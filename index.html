@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lightbulb Education | Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .bg-yellow-brand { background-color: #FFD700; }
+        .border-black-brand { border: 2px solid #1A1A1A; }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-black">
+    <nav class="bg-black text-white p-4 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-yellow-brand rounded-full flex items-center justify-center text-black font-bold">L</div>
+            <h1 class="text-xl font-bold tracking-tight">Lightbulb Education</h1>
+        </div>
+        <div class="flex gap-4 items-center">
+            <span class="text-sm opacity-80">Teacher Panel</span>
+            <button class="bg-yellow-brand text-black px-4 py-1 rounded-md font-semibold hover:bg-white transition">Logout</button>
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto p-8">
+        <section class="mb-12 bg-white border-black-brand rounded-xl p-6 shadow-[8px_8px_0px_0px_rgba(26,26,26,1)]">
+            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">💡 Assign New Task</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <input type="text" placeholder="Assignment Name" class="border-2 border-black p-2 rounded-lg focus:ring-2 ring-yellow-400 outline-none">
+                <select id="type" class="border-2 border-black p-2 rounded-lg">
+                    <option value="worksheet">Worksheet (PDF)</option>
+                    <option value="essay">Essay (Text Box)</option>
+                </select>
+                <div id="essay-configs" class="flex gap-2">
+                    <input type="number" placeholder="Min Sentences" class="w-full border-2 border-black p-2 rounded-lg">
+                </div>
+            </div>
+            <button class="mt-4 w-full bg-black text-white py-3 rounded-lg font-bold hover:bg-yellow-brand hover:text-black transition-all">Assign to All Students</button>
+        </section>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white border-2 border-black rounded-xl overflow-hidden hover:translate-y-[-4px] transition-transform shadow-md">
+                <div class="bg-yellow-brand p-3 border-b-2 border-black flex justify-between items-center">
+                    <span class="font-bold uppercase text-xs tracking-widest">Worksheet</span>
+                    <span class="text-xs font-medium">Due Tomorrow</span>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2 uppercase">Unit 3: Algebra Basics</h3>
+                    <p class="text-gray-600 mb-4 text-sm">Download the PDF, complete it on paper, and upload a clear photo.</p>
+                    <div class="flex gap-2">
+                        <button class="flex-1 border-2 border-black py-2 rounded-md font-bold hover:bg-black hover:text-white transition">Download PDF</button>
+                        <button class="flex-1 bg-black text-white py-2 rounded-md font-bold hover:bg-yellow-brand hover:text-black transition">Upload Work</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
